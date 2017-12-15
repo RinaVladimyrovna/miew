@@ -1,13 +1,8 @@
-import webdriver from 'selenium-webdriver';
-import firefoxDriver from 'selenium-webdriver/firefox';
-import operaDriver from 'selenium-webdriver/opera';
-import ieDriver from 'selenium-webdriver/ie';
-import chromeDriver from 'selenium-webdriver/chrome';
-import edgeDriver from 'selenium-webdriver/edge';
 import chai, {expect} from 'chai';
 import dirtyChai from 'dirty-chai';
 import _ from 'lodash';
 
+import {createDriverInstance} from './driver';
 import MiewPage from './pages/miew.page';
 import golden from './golden';
 
@@ -28,18 +23,8 @@ describe('As a power user, I want to', function() {
   this.timeout(0);
   this.slow(1000);
 
-  //be aware to call 'MicrosoftEdge' instead of 'edge' to use it
   before(function() {
-    driver = new webdriver.Builder()
-      .forBrowser('chrome')
-      .setFirefoxOptions(new firefoxDriver.Options())
-      .setChromeOptions(new chromeDriver.Options())
-      .setIeOptions(new ieDriver.Options().requireWindowFocus(true).enablePersistentHover(false))
-      .setEdgeOptions(new edgeDriver.Options())
-      .setOperaOptions(new operaDriver.Options()
-        .setOperaBinaryPath('C:\\...\\opera.exe'))
-      .build();
-
+    driver = createDriverInstance();
     return golden.startup(driver, cfg)
       .then((url) => {
         page = new MiewPage(driver, url);

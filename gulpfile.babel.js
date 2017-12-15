@@ -48,7 +48,31 @@ gulp.task('default', done =>
   sequence(['clean', 'lint'], 'test:cover', ['build', 'docs'], done));
 
 //////////////////////////////////////////////////////////////////////////////
+//lets user to choose the browser for e2e tests to run in, see gulp test:e2e task
+var browserName = 'chrome';
 
+function decideBrowserInstanceName() {
+
+  if (yargs.argv.firefox) {
+    browserName = 'firefox';
+  }
+  if (yargs.argv.edge) {
+    browserName = 'MicrosoftEdge';
+  }
+  if (yargs.argv.ie) {
+    browserName = 'ie';
+  }
+  if (yargs.argv.opera) {
+    browserName = 'opera';
+  }
+  if (yargs.argv.chrome) {
+    browserName = 'chrome';
+  }
+  return browserName;
+}
+export {browserName};
+
+//////////////////////////////////////////////////////////////////////////////
 function _cleanTasks(names) {
   for (let i = 0; i < names.length; ++i) {
     const name = names[i];
@@ -117,9 +141,11 @@ gulp.task('test:coveralls', () =>
   gulp.src(config.cover.dst + 'lcov.info')
     .pipe(plugins.coveralls()));
 
-gulp.task('test:e2e', ['clean:e2e'], () =>
+gulp.task('test:e2e', ['clean:e2e'], () => {
+  browserName = decideBrowserInstanceName();
   gulp.src(config.e2e.src, {read: false})
-    .pipe(plugins.mocha()));
+    .pipe(plugins.mocha());
+});
 
 //////////////////////////////////////////////////////////////////////////////
 
