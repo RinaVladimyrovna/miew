@@ -49,26 +49,25 @@ gulp.task('default', done =>
 
 //////////////////////////////////////////////////////////////////////////////
 //lets user to choose the browser for e2e tests to run in, see gulp test:e2e task
-var browserName = 'chrome';
+var browserName;
 
 function decideBrowserInstanceName() {
-
-  if (yargs.argv.firefox) {
+  switch (yargs.argv.in) {
+  case 'firefox':
     browserName = 'firefox';
-  }
-  if (yargs.argv.edge) {
-    browserName = 'MicrosoftEdge';
-  }
-  if (yargs.argv.ie) {
-    browserName = 'ie';
-  }
-  if (yargs.argv.opera) {
+    break;
+  case 'opera':
     browserName = 'opera';
-  }
-  if (yargs.argv.chrome) {
+    break;
+  case 'edge':
+    browserName = 'MicrosoftEdge';
+    break;
+  case 'ie':
+    browserName = 'ie';
+    break;
+  default:
     browserName = 'chrome';
   }
-  return browserName;
 }
 export {browserName};
 
@@ -142,7 +141,7 @@ gulp.task('test:coveralls', () =>
     .pipe(plugins.coveralls()));
 
 gulp.task('test:e2e', ['clean:e2e'], () => {
-  browserName = decideBrowserInstanceName();
+  decideBrowserInstanceName();
   gulp.src(config.e2e.src, {read: false})
     .pipe(plugins.mocha());
 });
