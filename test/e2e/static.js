@@ -64,9 +64,11 @@ export default {
       "verticalAlign = 'top'", 'horizontalAlign = "left"', 'dx = -10',
       'dy = 10', 'bg = "adjust"', 'fg = "inverse"', 'showBg = false']
   }],
-  colomnSelectors: [{name: 'serial', colorId: 'SQ', val: ' 1097:1640, 5450:5984'},
-    {name: 'sequence', colorId: 'CH', val: ' 101:106'}, {name: 'chain', colorId: 'CH', val: ' A, C, F, 2, 5, 9'},
-    {name: 'nucleic', colorId: 'SS', val: ''}, {name: 'purine', colorId: 'RT', val: ''},
-    {name: 'pyrimidine', colorId: 'RT', val: ''}
+  egkSelectors: [{name: 'chain B, D', colorId: 'CH'},
+    {name: 'nucleic', colorId: 'SS'}, {name: 'purine', colorId: 'RT'},
+    {name: 'pyrimidine', colorId: 'RT'}
+  ],
+  vhgSelectors: ['charged', 'nonpolar', 'polar', 'basic', 'acidic', 'aromatic', 'protein', 'none', 'water', 'hetatm',
+    'name OG1', 'elem N', 'residue pro', 'altloc B', 'polarh', 'nonpolarh', 'serial 379:2584', 'sequence 61:239'
   ]
 };

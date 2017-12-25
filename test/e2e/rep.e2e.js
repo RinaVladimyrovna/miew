@@ -167,7 +167,8 @@ view "18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ=="`))
 
     it('let us take a smaller part of the molecule for tests', function() {
       return page.runScript(`\
-clear\nload "mmtf:1aid"
+clear
+load "mmtf:1aid"
 preset small
 view "18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ=="
 selector "chain B"`)
@@ -197,8 +198,7 @@ selector "chain B"`)
       it('load 5VHG with an appropriate orientation and scale', function() {
         return page.openTerminal()
           .then(() => page.runScript(`\
-clear\n
-set interpolateViews false
+clear
 load 5vhg
 remove 1
 view "1S4GJwX0/TcFCYCLBwi4aPQAAAAAAAACAAAAAgA=="`))
@@ -209,7 +209,7 @@ view "1S4GJwX0/TcFCYCLBwi4aPQAAAAAAAACAAAAAgA=="`))
 
       const suite = this;
       before(function() {
-        return Promise.all([retrieve.modes, staticConf.selectorList]).then(([modes, selectors]) => {
+        return Promise.all([retrieve.modes, staticConf.vhgSelectors]).then(([modes, selectors]) => {
           _.each(modes, (mode) => {
             _.each(selectors, (selector) => {
               const command = `clear\nrep 0 m=${mode.id} s="${selector}" c=RT`;
@@ -226,30 +226,29 @@ view "1S4GJwX0/TcFCYCLBwi4aPQAAAAAAAACAAAAAgA=="`))
     });
 
     describe('serial, sequence, chain, nucleic, purine, pyrimidine', function() {
-      it('load 1UTF with an appropriate orientation and scale', function() {
+      it('load 1EGK with an appropriate orientation and scale', function() {
         return page.openTerminal()
           .then(() => page.runScript(`\
-clear\n
-set interpolateViews false
-load 1utf
+clear
+load "mmtf:1egk"
 remove 1
-view "1g9IOwe1yGb6xlIzCvSyiPOsKW7y4hzU/3MgGvg=="`))
-          .then(() => page.waitUntilTitleContains('1UTF'))
+view "1phhnwNej58H4SfBB3HjrPHDAbj7JfwHAbBkxvg=="`))
+          .then(() => page.waitUntilTitleContains('1EGK'))
           .then(() => page.waitUntilRebuildIsDone())
-          .then(() => golden.shouldMatch('1utf', this));
+          .then(() => golden.shouldMatch('1egk', this));
       });
 
       const suite = this;
       before(function() {
-        return Promise.all([retrieve.modes, staticConf.colomnSelectors]).then(([modes, selectors]) => {
+        return Promise.all([retrieve.modes, staticConf.egkSelectors]).then(([modes, selectors]) => {
           _.each(modes, (mode) => {
             _.each(selectors, (selector) => {
-              const command = `clear\nrep 0 m=${mode.id} s="${selector.name}${selector.val}" c=${selector.colorId}`;
+              const command = `clear\nrep 0 m=${mode.id} s="${selector.name}" c=${selector.colorId}`;
               suite.addTest(it(`set ${mode.name} mode with ${selector.name} selection`, function() {
                 return page.runScript(command)
-                  .then(() => page.waitUntilTitleContains('1UTF'))
+                  .then(() => page.waitUntilTitleContains('1EGK'))
                   .then(() => page.waitUntilRepresentationIs(0, mode.id, selector.colorId))
-                  .then(() => golden.shouldMatch(`1utf_${mode.id}_${selector.name}`, this));
+                  .then(() => golden.shouldMatch(`1egk_${mode.id}_${selector.name.split(/\s\w+/)[0]}`, this));
               }));
             });
           });
