@@ -70,5 +70,34 @@ export default {
   ],
   vhgSelectors: ['charged', 'nonpolar', 'polar', 'basic', 'acidic', 'aromatic', 'protein', 'none', 'water', 'hetatm',
     'name OG1', 'elem N', 'residue pro', 'altloc B', 'polarh', 'nonpolarh', 'serial 379:2584', 'sequence 61:239'
-  ]
+  ],
+  loadList: [{
+    moleculeId: '3C9L', link: '3c9l', source: 'protein data bank', format: 'pdb',
+    view: '1fMF4QSevYcIN5EE/3ZzNPJuGk7izdC29eW5lPw=='
+  },
+  {
+    moleculeId: '3C9L', link: 'cif:3c9l', source: 'protein data bank', format: 'mmcif',
+    view: '1fMF4QSevYcIN5EE/3ZzNPJuGk7izdC29eW5lPw=='
+  },
+  {
+    moleculeId: '3C9L', link: 'mmtf:3c9l', source: 'MMTF', format: 'mmtf',
+    view: '1fMF4QSevYcIN5EE/3ZzNPJuGk7izdC29eW5lPw=='
+  },
+  {
+    moleculeId: 'Unknown', link: 'ccp4:3c9l', source: 'Collaborative Computational Project No. 4', format: 'ccp4',
+    view: '1aTeQwRaldMKM7zpAueBrPCyqAb7XOTa/l8qHPw=='
+  },
+  {
+    moleculeId: 'ergosteryl 3-beta-D-glucoside', link: 'pubchem:ergosteryl 3-beta-D-glucoside', source: 'PubChem',
+    format: 'json', view: '1BOccP2UZYj3Jdl4+QBYJPgAAAAAAAACAAAAAgA=='
+  }],
+  renderSettingList: ['axes', 'fog', 'fxaa', 'ao', 'draft.clipPlane'], //pair with ['true', 'false'] array
+  renderSettingList1: ['theme light', 'theme dark', 'fogFarFactor 1.5', 'fogNearFactor 1.5', 'scale 0.8', 'scale 1.25',
+    'rotate x 180', 'rotate y -72 y -72 y -36', 'rotate x 180 z 180 y 180', 'translate x 2', 'translate y 2',
+    'translate z 2', 'palette VM', 'palette jmol', 'stereo ANAGLYPH', 'stereo DISTORTED', 'stereo NONE'
+  ],
+  objectLines: [{
+    command: 'line A.42.O A.29.OH',
+    settings: ['color  = 0x357896', 'dashSize = 0.6', 'gapSize = 0.2']
+  }]
 };
