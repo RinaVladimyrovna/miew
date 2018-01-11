@@ -13,9 +13,12 @@ const menu = {
   openButton: By.css('div.btns-miew-titlebar:nth-child(3) > button:nth-child(1)'),
   closeButton: By.css('div.col-sm-3:nth-child(1) > div:nth-child(1) > button:nth-child(1)'),
   representationTab: By.css('div.col-sm-3:nth-child(1) > div:nth-child(2) > a:nth-child(3)'),
+  loadTab: By.css('div.col-sm-3:nth-child(1) > div:nth-child(2) > a:nth-child(2)'),
+  loadField: By.css('.main > form:nth-child(1) > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)'),
   modeTab: By.css('div.in:nth-child(2) > ul:nth-child(1) > li:nth-child(2)'),
   colorTab: By.css('div.in:nth-child(2) > ul:nth-child(1) > li:nth-child(3)'),
   returnButton: By.css('div.col-xs-12:nth-child(8) > div:nth-child(1) > button:nth-child(1)'),
+  loadOpenButton: By.css('span.btn:nth-child(2)'),
   modeNames: {
     constPathPart: 'div.col-xs-12:nth-child(8) > div:nth-child(2) > div:nth-child(1) > a:nth-child',
     listLength: 12
@@ -54,10 +57,8 @@ function modeColorPairs(caseSwitch, colour, mode) {
   return driver.wait(until.elementLocated(menu.openButton), 5 * 1000)
     .then(() => {
       if (caseSwitch) {
-        console.log('Just change colour and do not warry =-)');
         return driver.findElement(menu.openButton).click();
       } else {
-        console.log('Change mode first!');
         return driver.findElement(menu.openButton).click()
           .then(() => driver.findElement(menu.representationTab).click())
           .then(() => driver.wait(until.elementLocated(menu.modeTab), 5 * 1000))
@@ -107,6 +108,24 @@ describe('As a power user, I want to', function() {
           }));
         }
       });
+    });
+  });
+
+  before(function() {
+    let loads = identifiers.loadList;
+    _.each(loads, (load) => {
+      suite.addTest(it(`check an opportunity of loading from ${load.source}`, function() {
+        return driver.wait(until.elementLocated(menu.openButton), 5 * 1000)
+          .then(() => driver.findElement(menu.openButton).click())
+          .then(() => driver.findElement(menu.loadTab).click())
+          .then(() => driver.wait(until.elementLocated(menu.loadField)))
+          .then(() => driver.findElement(menu.loadField).sendKeys(`${load.link}`))
+          .then(() => driver.wait(until.elementLocated(menu.loadOpenButton)))
+          .then(() => driver.findElement(menu.loadOpenButton).click())
+          .then(() => page.waitUntilTitleContains(`${load.moleculeId}`))
+          .then(() => page.waitUntilRebuildIsDone())
+          .then(() => golden.shouldMatch(`${load.format}`, this));
+      }));
     });
   });
 
