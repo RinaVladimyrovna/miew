@@ -7,63 +7,71 @@ import golden from './golden';
 chai.use(dirtyChai);
 import goldenCfg from './golden.cfg';
 import {createDriverInstance} from './driver';
+import identifiers from './static';
 
-const domic = {
-  menu: {
-    openButton: By.css('div.btns-miew-titlebar:nth-child(3) > button:nth-child(1)'),
-    closeButton: By.css('div.col-sm-3:nth-child(1) > div:nth-child(1) > button:nth-child(1)'),
-    representationTab: By.css('div.col-sm-3:nth-child(1) > div:nth-child(2) > a:nth-child(3)'),
-    modeTab: By.css('div.in:nth-child(2) > ul:nth-child(1) > li:nth-child(2)'),
-    colorTab: By.css('div.in:nth-child(2) > ul:nth-child(1) > li:nth-child(3)'),
-    returnButton: By.css('div.col-xs-12:nth-child(8) > div:nth-child(1) > button:nth-child(1)'),
-    modeNames: {
-      constPathPart: 'div.col-xs-12:nth-child(8) > div:nth-child(2) > div:nth-child(1) > a:nth-child',
-      listLength: 12
-    },
-    colorNames: {
-      constPathPart: 'div.col-xs-12:nth-child(9) > div:nth-child(2) > div:nth-child(1) > a:nth-child',
-      listLength: 12
-    },
-    materialNames: {
-      constPathPart: 'div.col-xs-12:nth-child(11) > div:nth-child(2) > div:nth-child(1) > a:nth-child',
-      listLength: 6
-    }
+const menu = {
+  openButton: By.css('div.btns-miew-titlebar:nth-child(3) > button:nth-child(1)'),
+  closeButton: By.css('div.col-sm-3:nth-child(1) > div:nth-child(1) > button:nth-child(1)'),
+  representationTab: By.css('div.col-sm-3:nth-child(1) > div:nth-child(2) > a:nth-child(3)'),
+  modeTab: By.css('div.in:nth-child(2) > ul:nth-child(1) > li:nth-child(2)'),
+  colorTab: By.css('div.in:nth-child(2) > ul:nth-child(1) > li:nth-child(3)'),
+  returnButton: By.css('div.col-xs-12:nth-child(8) > div:nth-child(1) > button:nth-child(1)'),
+  modeNames: {
+    constPathPart: 'div.col-xs-12:nth-child(8) > div:nth-child(2) > div:nth-child(1) > a:nth-child',
+    listLength: 12
+  },
+  colorNames: {
+    constPathPart: 'div.col-xs-12:nth-child(9) > div:nth-child(2) > div:nth-child(1) > a:nth-child',
+    listLength: 12
+  },
+  materialNames: {
+    constPathPart: 'div.col-xs-12:nth-child(11) > div:nth-child(2) > div:nth-child(1) > a:nth-child',
+    listLength: 6
   }
 };
 
-function fillInArray(arrDetales) {
+const cfg = Object.assign({}, goldenCfg, {
+  title: 'Representations Tests',
+  report: 'report-menu-rep.html',
+});
+
+let driver;
+let page;
+
+function fillInArray(arrDetales, identifierArr) {
   let holder = [];
   for (let i = 1; i <= arrDetales.listLength; ++i) {
+    let newElement = {};
     let semiElement = arrDetales.constPathPart + '(' + i + ')';
-    let newElement = By.css(semiElement);
+    newElement.css = By.css(semiElement);
+    newElement.identifier = identifierArr[i-1];
     holder.push(newElement);
   }
   return holder;
 }
 
-function repeat(colour) {
-  return driver.findElement(domic.menu.openButton).isDisplayed()
-    .then((visible) => {
-      if (visible) {
-        return driver.findElement(domic.menu.openButton).click();
+function modeColorPairs(caseSwitch, colour, mode) {
+  return driver.wait(until.elementLocated(menu.openButton), 5 * 1000)
+    .then(() => {
+      if (caseSwitch) {
+        console.log('Just change colour and do not warry =-)');
+        return driver.findElement(menu.openButton).click();
       } else {
-        return Promise.resolve();
+        console.log('Change mode first!');
+        return driver.findElement(menu.openButton).click()
+          .then(() => driver.findElement(menu.representationTab).click())
+          .then(() => driver.wait(until.elementLocated(menu.modeTab), 5 * 1000))
+          .then(() => driver.findElement(menu.modeTab).click())
+          .then(() => driver.findElement(mode.css).click());
       }
     })
-    .then(() => driver.wait(until.elementLocated(domic.menu.colorTab), 5 * 1000))
-    .then(() => driver.findElement(domic.menu.colorTab).click())
-    .then(() => driver.findElement(colour).click())
-    .then(() => driver.findElement(domic.menu.closeButton).click())
-    .then(() => page.waitUntilRebuildIsDone());
+    .then(() => driver.wait(until.elementLocated(menu.colorTab), 5 * 1000))
+    .then(() => driver.findElement(menu.colorTab).click())
+    .then(() => driver.findElement(colour.css).click())
+    .then(() => driver.findElement(menu.closeButton).click())
+    .then(() => page.waitUntilRebuildIsDone())
+    .then(() => golden.shouldMatch(`1aid_${mode.identifier}_${colour.identifier}`, this));
 }
-
-const cfg = Object.assign({}, goldenCfg, {
-  title: 'Representations Tests',
-  report: 'report-rep.html',
-});
-
-let driver;
-let page;
 
 describe('As a power user, I want to', function() {
 
@@ -85,20 +93,20 @@ describe('As a power user, I want to', function() {
   let suite = this;
 
   before(function() {
-    let modes = fillInArray(domic.menu.modeNames);
-    let colours = fillInArray(domic.menu.colorNames);
+    let modes = fillInArray(menu.modeNames, identifiers.modeIdentifiers);
+    let colours = fillInArray(menu.colorNames, identifiers.colorIdentifiers);
     _.each(modes, (mode) => {
-      suite.addTest(it('check mode function', function() {
-        //open Menu, select representation tab
-        return driver.findElement(domic.menu.openButton).click()
-          .then(() => driver.findElement(domic.menu.representationTab).click())
-          //Select representation mode
-          .then(() => driver.wait(until.elementLocated(domic.menu.modeTab), 5 * 1000))
-          .then(() => driver.findElement(domic.menu.modeTab).click())
-          .then(() => driver.findElement(mode).click())
-          //Select representation colour
-          .then(() => colours.forEach(repeat));
-      }));
+      _.each(colours, (colour, index) => {
+        if (index > 0) {
+          suite.addTest(it(`check ${colour.identifier} color with ${mode.identifier} mode`, function() {
+            return modeColorPairs(1, colour, mode);
+          }));
+        } else {
+          suite.addTest(it(`check ${colour.identifier} color with ${mode.identifier} mode`, function() {
+            return modeColorPairs(0, colour, mode);
+          }));
+        }
+      });
     });
   });
 
@@ -114,6 +122,13 @@ describe('As a power user, I want to', function() {
     return page.waitUntilTitleContains('1CRN')
       .then(() => page.waitUntilRebuildIsDone())
       .then(() => golden.shouldMatch('1crn', this));
+  });
+
+  it('use prearranged URL', function() {
+    return driver.get(`http://localhost:${cfg.localPort}/?l=1AID&p=small&v=18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ%3D%3D&interpolateViews=false`)
+      .then(() => page.waitUntilTitleContains('1AID'))
+      .then(() => page.waitUntilRebuildIsDone())
+      .then(() => golden.shouldMatch('1aid', this));
   });
 });
 

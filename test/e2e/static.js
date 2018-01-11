@@ -1,4 +1,7 @@
 export default {
+  materialIdentifiers: ['DF', 'SF', 'PL', 'ME', 'TR', 'GL'],
+  colorIdentifiers: ['EL', 'RT', 'SQ', 'CH', 'SS', 'UN', 'CO', 'CF', 'TM', 'OC', 'HY', 'MO'],
+  modeIdentifiers: ['LN', 'LC', 'BS', 'VW', 'TR', 'TU', 'CA', 'QS', 'SA', 'SE', 'CS', 'TX'],
   colourSettings: [{
     colorId: 'EL', settingNames: ['carbon = "purple"', 'carbon = 0x00FF00', 'carbon = -1',
       'carbon = 7394559']
