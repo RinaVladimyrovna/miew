@@ -1,6 +1,5 @@
 import chai from 'chai';
 import dirtyChai from 'dirty-chai';
-import _ from 'lodash';
 import MiewPage from './pages/miew.page';
 import golden from './golden';
 import goldenCfg from './golden.cfg';
@@ -10,7 +9,7 @@ chai.use(dirtyChai);
 
 const cfg = Object.assign({}, goldenCfg, {
   title: 'Representations Tests',
-  report: 'report-menu-rep.html',
+  report: 'report-menu-tests.html',
 });
 
 let driver, page;

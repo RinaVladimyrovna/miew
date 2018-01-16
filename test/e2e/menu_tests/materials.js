@@ -1,4 +1,4 @@
-import {By, until} from 'selenium-webdriver';
+import {until} from 'selenium-webdriver';
 import golden from '../golden';
 import {driver, page} from '../menu.e2e';
 import {menu, fillInArray} from './adds';
@@ -30,7 +30,7 @@ describe('Statr checking materials', function() {
   });
 
   it('load apropriate molecule structure', function() {
-    return driver.get(`http://localhost:8008/?l=1AID&r=0&m=QS!scale:1,isoValue:0.5&r=1&s=all&m=BS&c=EL&mt=SF&v=18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ%3D%3D&interpolateViews=false`)
+    return driver.get('http://localhost:8008/?l=1AID&r=0&m=QS!scale:1,isoValue:0.5&r=1&s=all&m=BS&c=EL&mt=SF&v=18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ%3D%3D&interpolateViews=false')
       .then(() => page.waitUntilTitleContains('1AID'))
       .then(() => page.waitUntilRebuildIsDone())
       .then(() => golden.shouldMatch('1aid_QS_EL', this));

@@ -30,7 +30,7 @@ describe('Start checking combinations', function() {
   });
 
   it('use prearranged URL', function() {
-    return driver.get(`http://localhost:8008/?l=1AID&p=small&v=18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ%3D%3D&interpolateViews=false`)
+    return driver.get('http://localhost:8008/?l=1AID&p=small&v=18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ%3D%3D&interpolateViews=false')
       .then(() => page.waitUntilTitleContains('1AID'))
       .then(() => page.waitUntilRebuildIsDone())
       .then(() => golden.shouldMatch('1aid_BS_EL', this));
