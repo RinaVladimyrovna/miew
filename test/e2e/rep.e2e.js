@@ -7,12 +7,28 @@ import goldenCfg from './golden.cfg';
 
 chai.use(dirtyChai);
 
+var representationTests = require('./terminal_tests/reps'),
+  colourTests = require('./terminal_tests/color_params'),
+  materialTests = require('./terminal_tests/materials'),
+  modeParamsTests = require('./terminal_tests/mode_params'),
+  selectorTests = require('./terminal_tests/selectors'),
+  loadingTests = require('./terminal_tests/loading');
+
 const cfg = Object.assign({}, goldenCfg, {
   title: 'Representations Tests',
   report: 'report-terminal-tests.html',
 });
 
 let driver, page;
+
+function TestingWithCurrentSettings() {
+  representationTests.RepresentationTests();
+  colourTests.ColourTests();
+  materialTests.MaterialTests();
+  modeParamsTests.ModeParamsTests();
+  selectorTests.SelectorTests();
+  loadingTests.LoadingTests();
+}
 
 describe('As a power user, I want to', function() {
 
@@ -45,39 +61,117 @@ describe('As a power user, I want to', function() {
       .then(() => golden.shouldMatch('1crn', this));
   });
 
-  it('load 1AID with an appropriate orientation and scale', function() {
-    return page.openTerminal()
-      .then(() => page.runScript(`\
+  describe('use standard settings during testing', function() {
+
+    it('load 1AID with an appropriate orientation, scale and settings', function() {
+      return page.openTerminal()
+        .then(() => page.runScript(`\
 set interpolateViews false
 load 1AID
 view "18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ=="`))
-      .then(() => page.waitUntilTitleContains('1AID'))
-      .then(() => page.waitUntilRebuildIsDone())
-      .then(() => golden.shouldMatch('1aid', this));
+        .then(() => page.waitUntilTitleContains('1AID'))
+        .then(() => page.waitUntilRebuildIsDone())
+        .then(() => golden.shouldMatch('1aid', this));
+    });
+
+    describe('start testing with current settings', function() {
+      TestingWithCurrentSettings();
+    });
   });
 
-  describe('reps', function() {
-    require('./terminal_tests/reps');
+  describe('use VMD palette colours during testing', function() {
+
+    it('load 1AID with an appropriate orientation, scale and settings', function() {
+      return page.openTerminal()
+        .then(() => page.runScript(`\
+set interpolateViews false
+set palette VM
+load 1AID
+view "18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ=="`))
+        .then(() => page.waitUntilTitleContains('1AID'))
+        .then(() => page.waitUntilRebuildIsDone())
+        .then(() => golden.shouldMatch('1aid', this));
+    });
+
+    describe('start testing with current settings', function() {
+      TestingWithCurrentSettings();
+    });
   });
 
-  describe('color params', function() {
-    require('./terminal_tests/color_params');
+  describe('use light theme during testing', function() {
+
+    it('load 1AID with an appropriate orientation, scale and settings', function() {
+      return page.openTerminal()
+        .then(() => page.runScript(`\
+set interpolateViews false
+set theme light
+load 1AID
+view "18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ=="`))
+        .then(() => page.waitUntilTitleContains('1AID'))
+        .then(() => page.waitUntilRebuildIsDone())
+        .then(() => golden.shouldMatch('1aid', this));
+    });
+
+    describe('start testing with current settings', function() {
+      TestingWithCurrentSettings();
+    });
   });
 
-  describe('materials', function() {
-    require('./terminal_tests/materials');
+  describe('use fog absence during testing', function() {
+
+    it('load 1AID with an appropriate orientation, scale and settings', function() {
+      return page.openTerminal()
+        .then(() => page.runScript(`\
+set interpolateViews false
+set fog false
+load 1AID
+view "18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ=="`))
+        .then(() => page.waitUntilTitleContains('1AID'))
+        .then(() => page.waitUntilRebuildIsDone())
+        .then(() => golden.shouldMatch('1aid', this));
+    });
+
+    describe('start testing with current settings', function() {
+      TestingWithCurrentSettings();
+    });
   });
 
-  describe('mode_params', function() {
-    require('./terminal_tests/mode_params');
+  describe('use ambient occlusion during testing', function() {
+
+    it('load 1AID with an appropriate orientation, scale and settings', function() {
+      return page.openTerminal()
+        .then(() => page.runScript(`\
+set interpolateViews false
+set ao true
+load 1AID
+view "18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ=="`))
+        .then(() => page.waitUntilTitleContains('1AID'))
+        .then(() => page.waitUntilRebuildIsDone())
+        .then(() => golden.shouldMatch('1aid', this));
+    });
+
+    describe('start testing with current settings', function() {
+      TestingWithCurrentSettings();
+    });
   });
 
-  describe('selectors', function() {
-    require('./terminal_tests/selectors');
-  });
+  describe('use clip plane during testing', function() {
 
-  describe('loading', function() {
-    require('./terminal_tests/loading');
+    it('load 1AID with an appropriate orientation, scale and settings', function() {
+      return page.openTerminal()
+        .then(() => page.runScript(`\
+set interpolateViews false
+set draft.clipPlane true
+load 1AID
+view "18KeRwuF6IsJGtmPAkO9IPZrOGD9xy0I/ku/APQ=="`))
+        .then(() => page.waitUntilTitleContains('1AID'))
+        .then(() => page.waitUntilRebuildIsDone())
+        .then(() => golden.shouldMatch('1aid', this));
+    });
+
+    describe('start testing with current settings', function() {
+      TestingWithCurrentSettings();
+    });
   });
 });
 

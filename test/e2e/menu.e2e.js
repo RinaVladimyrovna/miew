@@ -4,8 +4,16 @@ import MiewPage from './pages/miew.page';
 import golden from './golden';
 import goldenCfg from './golden.cfg';
 import {createDriverInstance} from './driver';
+//import _ from 'lodash';
 
 chai.use(dirtyChai);
+
+var representationTests = require('./menu_tests/reps'),
+  displayTests = require('./menu_tests/display'),
+  materialTests = require('./menu_tests/materials'),
+  //modeParamsTests = require('./menu_tests/mode_params'),
+  //selectorTests = require('./menu_tests/selectors'),
+  loadingTests = require('./menu_tests/loadings');
 
 const cfg = Object.assign({}, goldenCfg, {
   title: 'Representations Tests',
@@ -13,6 +21,15 @@ const cfg = Object.assign({}, goldenCfg, {
 });
 
 let driver, page;
+
+function TestingWithCurrentSettings() {
+  representationTests.RepresentationTests();
+  displayTests.DisplayTests();
+  materialTests.MaterialTests();
+  //modeParamsTests.ModeParamsTests();
+  //selectorTests.SelectorTests();
+  loadingTests.LoadingTests();
+}
 
 describe('As a power user, I want to', function() {
 
@@ -45,20 +62,8 @@ describe('As a power user, I want to', function() {
       .then(() => golden.shouldMatch('1crn', this));
   });
 
-  describe('be able to load molecules from different sources', function() {
-    require('./menu_tests/loadings');
-  });
-
-  describe('list all mode + color combinations via Menu', function() {
-    require('./menu_tests/menu');
-  });
-
-  describe('list all mode + color combinations via Display buttons', function() {
-    require('./menu_tests/display');
-  });
-
-  describe('list all materials', function() {
-    require('./menu_tests/materials');
+  describe('experiment', function() {
+    TestingWithCurrentSettings();
   });
 });
 

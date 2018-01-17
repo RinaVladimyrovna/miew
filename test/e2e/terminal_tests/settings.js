@@ -3,8 +3,8 @@ import staticConf from '../static';
 import golden from '../golden';
 import {page} from '../rep.e2e';
 
-exports.ModeParamsTests = function() {
-  describe('check correct mode parameters work', function() {
+exports.SettingsTests = function() {
+  describe('use diffenet settings combinations', function() {
 
     const suite = this;
 

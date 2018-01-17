@@ -5,7 +5,7 @@ import {createDriverInstance} from './driver';
 
 const cfg = Object.assign({}, goldenCfg, {
   title: 'API Tests',
-  report: 'report-api.html',
+  report: 'report-api-tests.html',
 });
 
 let driver;
