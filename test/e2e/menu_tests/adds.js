@@ -1,6 +1,8 @@
+// import all we need
 import {By, until} from 'selenium-webdriver';
 import {driver, page} from '../menu.e2e';
 import golden from '../golden';
+// forgive me reader! I tried my best...
 ////////////////////////////////////////////////////////////////////////////////////
 //css selectors for menu panels and display buttons are listed in the consts below//
 ////////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +44,7 @@ const display = {
   }
 };
 /////////////////////////////////////////////////////////////////////////////////////
-//Fiils in arrays used for shifting through mode, color, material lists            //
+//Fills in arrays used for shifting through mode, color, material lists            //
 //Every element of returnd array holds identifier + By.css(selector) pair as object//
 /////////////////////////////////////////////////////////////////////////////////////
 function fillInArray(arrMinutiae, identifierArr) {
@@ -87,14 +89,19 @@ function modeColorPairs(caseSwitch, colour, mode) {
 function modeColorDisplay(caseSwitch, colour, mode) {
   return Promise.resolve()
     .then(() => {
+// select mode type in case we just opened Menu for the first time
+// or we used all color types with current mode type
+// caseSwitch take either 0 or 1
       if (!caseSwitch) {
         return driver.findElement(display.modeButton).click()
           .then(() => driver.wait(until.elementLocated(mode.css), 5 * 1000))
           .then(() => driver.findElement(mode.css).click());
       } else {
+// just ignore it if we do not need to change a mode type
         return Promise.resolve();
       }
     })
+// change color type to the next colour
     .then(() => driver.wait(until.elementLocated(display.colorButton), 5 * 1000))
     .then(() => driver.findElement(display.colorButton).click())
     .then(() => driver.wait(until.elementLocated(colour.css), 5 * 1000))

@@ -1,3 +1,4 @@
+// import all we need
 import chai, {expect} from 'chai';
 import dirtyChai from 'dirty-chai';
 import {createDriverInstance} from './driver';
@@ -17,12 +18,13 @@ const cfg = Object.assign({}, goldenCfg, {
 
 let driver, page;
 
+// make something with those functions
 function getDescenders(rootElement, xPath) {
-  let descendents = [];
+  let descendants = [];
   return driver.findElement(rootElement).findElements(xPath)
     .then((result) => {
-      descendents = result;
-      return descendents;
+      descendants = result;
+      return descendants;
     });
 }
 
@@ -31,10 +33,6 @@ function getElementsText(elementsToIterate) {
   elementsToIterate.forEach((elem) => elem.getText().then((elemText) => textsArray.push(elemText)));
   return textsArray;
 }
-
-function getHtmlElementValue(htmlElement) {
-  return htmlElement.getAttribute('innerText').then((value) => value);
-};
 
 function getHtmlElementVisiability(htmlElement) {
   return htmlElement.isDisplayed().then((result) => console.log(result));
@@ -45,24 +43,24 @@ function takeElementsText(elementToTakeTextOf) {
   return singleElementText;
 }
 
-function findElementsFirstDescendents(elementToFindDescendentsOf) {
-  return elementToFindDescendentsOf.findElements(By.xpath('./*'))
-    .then((firstStageDescendents) => {
-      let descendents = [];
-      descendents = descendents.concat(firstStageDescendents);
-      return descendents;
+function findElementsFirstDescendants(elementToFindDescendantsOf) {
+  return elementToFindDescendantsOf.findElements(By.xpath('./*'))
+    .then((firstStageDescendants) => {
+      let descendants = [];
+      descendants = descendants.concat(firstStageDescendants);
+      return descendants;
     });
 }
 
 function takeEveryDescentsText(elementToOperateOn) {
-  return findElementsFirstDescendents(elementToOperateOn)
-    .then((firstStateDescendents) => {
-      let descendentsText = [];
-      firstStateDescendents.forEach((descendent) => {
-        return takeElementsText(descendent)
-          .then((singleDescendentText) => descendentsText.push(singleDescendentText));
+  return findElementsFirstDescendants(elementToOperateOn)
+    .then((firstStateDescendants) => {
+      let descendantsText = [];
+      firstStateDescendants.forEach((descendant) => {
+        return takeElementsText(descendant)
+          .then((singleDescendantText) => descendantsText.push(singleDescendantText));
       });
-      return descendentsText;
+      return descendantsText;
     });
 }
 
@@ -77,7 +75,6 @@ function replaceOriginalElementsTextParts(originalElement) {
       everyDescentsText.map((descentText) => {
         originalElementText = originalElementText.replace(descentText, '');
       });
-      //console.log(1, originalElementText);
       return originalElementText;
     });
 }
@@ -115,7 +112,7 @@ describe('As a power user, I want to check menu functionality, e. g.', function(
   beforeEach(function() {
     golden.report.context.desc = this.currentTest.title;
   });
-
+///////is it needed???
   it('see 1CRN by default', function() {
     return page.waitUntilTitleContains('1CRN')
       .then(() => page.waitUntilRebuildIsDone())
@@ -143,7 +140,7 @@ describe('As a power user, I want to check menu functionality, e. g.', function(
       });
     });
 
-    it('see Info tab after Menu is opend', function() {
+    it('see Info panel after Menu is opened', function() {
       return driver.findElement(locator.openMenuButton).click()
         .then(() => driver.wait(until.elementLocated(locator.leftPanel.css), 5 * 1000))
         .then(() => driver.findElement(tabs[0].css).getAttribute('class'))
@@ -152,42 +149,53 @@ describe('As a power user, I want to check menu functionality, e. g.', function(
 
   });
 
-  describe('Info panel', function() {
+  describe('check Info panel containment', function() {
 
     let suite = this;
 
     before(function() {
-      _.each(locator.infoPanel.body.descendent.xPath, (xPath, index) => {
-        suite.addTest(it(`get Info panel body descendents text ${index}`, function() {
-          return getDescenders(locator.infoPanel.body.css, xPath)
-            .then((descendentArray) => getElementsText(descendentArray))
-            .then((array) => _.isEqual(array, locator.infoPanel.body.descendent.innerText[index]))
-            .then((result) => expect(result).to.be.equal(true));
+      _.each(locator.infoPanel.body.descendant.xPath, (xPath, index) => {
+        suite.addTest(it(`get Info panel body descendants text ${index}`, function() {
+          return driver.findElement(locator.infoPanel.body.css).findElements(xPath)
+            .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+            .then((resultArray) => {
+              let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+              return resultString;
+            })
+            .then((result) => expect(result).to.be.equal(locator.infoPanel.body.descendant.innerText[index]));
         }));
+            //.then((array) => _.isEqual(array, locator.infoPanel.body.descendant.innerText[index]))
+            //.then((result) => expect(result).to.be.equal(true));
+        //}));
       });
     });
 
-    it('check Info panel total text length', function() {
-      return driver.findElement(locator.infoPanel.panel.css).getText()
-        .then((panelText) => {
-          //console.log(panelText);
-          expect(panelText.length).to.equal(locator.infoPanel.panel.textLength);
-        });
+    it('Info panel total text', function() {
+      return driver.findElement(locator.infoPanel.panel.css).findElements(By.xpath('.//*'))
+        .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+        .then((resultArray) => {
+          let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+          return resultString;
+        })
+        .then((result) => expect(result).to.be.equal(locator.infoPanel.panel.summary));
     });
 
   });
 
-  describe('Load panel', function() {
+  describe('check Load panel containment', function() {
 
     let suite = this;
 
     before(function() {
-      _.each(locator.loadPanel.body.descendent.xPath, (xPath, index) => {
-        suite.addTest(it(`get Load panel body descendents text ${index}`, function() {
-          return getDescenders(locator.loadPanel.body.css, xPath)
-            .then((descendentArray) => getElementsText(descendentArray))
-            .then((array) => _.isEqual(array, locator.loadPanel.body.descendent.innerText[index]))
-            .then((result) => expect(result).to.be.equal(true));
+      _.each(locator.loadPanel.body.descendant.xPath, (xPath, index) => {
+        suite.addTest(it(`get Load panel body descendants text ${index}`, function() {
+          return driver.findElement(locator.loadPanel.body.css).findElements(xPath)
+            .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+            .then((resultArray) => {
+              let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+              return resultString;
+            })
+            .then((result) => expect(result).to.be.equal(locator.loadPanel.body.descendant.innerText[index]));
         }));
       });
     });
@@ -197,31 +205,33 @@ describe('As a power user, I want to check menu functionality, e. g.', function(
         .then(() => driver.findElement(tabs[1].css).getAttribute('class'))
         .then((attribute) => expect(attribute.split(/\s/).slice(-1)[0]).to.equal('active'));
     });
-//hidden cancel button? disabled load button?
-    it('check Load panel total text length', function() {
-      return driver.findElement(locator.loadPanel.panel.css).getText()
-        .then((panelText) => {
-          //console.log(panelText);
-          expect(panelText.length).to.equal(locator.loadPanel.panel.textLength);
-        });
+
+    it('Load panel total text', function() {
+      return driver.findElement(locator.loadPanel.panel.css).findElements(By.xpath('.//*'))
+        .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+        .then((resultArray) => {
+          let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+          return resultString;
+        })
+        .then((result) => expect(result).to.be.equal(locator.loadPanel.panel.summary));
     });
 
   });
 
-  describe('Representations panel', function() {
+  describe('check Representations panel containment', function() {
 
     let suite = this;
 
     before(function() {
-      _.each(locator.representationsPanel.body.descendent.xPath, (xPath, index) => {
-        suite.addTest(it(`get Representations panel body descendents text ${index}`, function() {
-          return getDescenders(locator.representationsPanel.body.css, xPath)
-            .then((descendentArray) => getElementsText(descendentArray))
-            .then((array) => {
-              //console.log(array);
-              return _.isEqual(array, locator.representationsPanel.body.descendent.innerText[index]);
+      _.each(locator.representationsPanel.body.descendant.xPath, (xPath, index) => {
+        suite.addTest(it(`get Representations panel body descendants text ${index}`, function() {
+          return driver.findElement(locator.representationsPanel.body.css).findElements(xPath)
+            .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+            .then((resultArray) => {
+              let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+              return resultString;
             })
-            .then((result) => expect(result).to.be.equal(true));
+            .then((result) => expect(result).to.be.equal(locator.representationsPanel.body.descendant.innerText[index]));
         }));
       });
     });
@@ -231,15 +241,8 @@ describe('As a power user, I want to check menu functionality, e. g.', function(
         .then(() => driver.findElement(tabs[2].css).getAttribute('class'))
         .then((attribute) => expect(attribute.split(/\s/).slice(-1)[0]).to.equal('active'));
     });
-//deprecate///////////////////////////
-    it.skip('check Representations panel total text length', function() {
-      return driver.findElement(locator.representationsPanel.panel.css).getText()
-        .then((panelText) => panelText.replace(/\n/g, ''))
-        .then((oneString) => oneString.replace(/\s+/g, ''))
-        .then((string) => expect(string.length).to.equal(locator.representationsPanel.panel.textLength));
-    });
-/////////////////////////////////////////////
-    it('compare all descendents', function() {
+
+    it('Representations panel total text', function() {
       return driver.findElement(locator.representationsPanel.panel.css).findElements(By.xpath('.//*'))
         .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
         .then((resultArray) => {
@@ -249,14 +252,83 @@ describe('As a power user, I want to check menu functionality, e. g.', function(
         .then((result) => expect(result).to.be.equal(locator.representationsPanel.panel.summary));
     });
   });
-});
 
+  describe('check Render Settings panel containment', function() {
+
+    let suite = this;
+
+    before(function() {
+      _.each(locator.renderSettingsPanel.body.descendant.xPath, (xPath, index) => {
+        suite.addTest(it(`get Render Settings panel body descendants text ${index}`, function() {
+          return driver.findElement(locator.renderSettingsPanel.body.css).findElements(xPath)
+            .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+            .then((resultArray) => {
+              let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+              return resultString;
+            })
+            .then((result) => expect(result).to.be.equal(locator.renderSettingsPanel.body.descendant.innerText[index]));
+        }));
+      });
+    });
+
+    it('open Render Settings panel', function() {
+      return driver.findElement(tabs[3].css).click()
+        .then(() => driver.findElement(tabs[3].css).getAttribute('class'))
+        .then((attribute) => expect(attribute.split(/\s/).slice(-1)[0]).to.equal('active'));
+    });
+
+    it('Render Settings panel total text', function() {
+      return driver.findElement(locator.renderSettingsPanel.panel.css).findElements(By.xpath('.//*'))
+        .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+        .then((resultArray) => {
+          let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+          return resultString;
+        })
+        .then((result) => expect(result).to.be.equal(locator.renderSettingsPanel.panel.summary));
+    });
+  });
+
+  describe('check Tools panel containment', function() {
+
+    let suite = this;
+
+    before(function() {
+      _.each(locator.toolsPanel.body.descendant.xPath, (xPath, index) => {
+        suite.addTest(it(`get Tools panel body descendants text ${index}`, function() {
+          return driver.findElement(locator.toolsPanel.body.css).findElements(xPath)
+            .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+            .then((resultArray) => {
+              let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+              return resultString;
+            })
+            .then((result) => console.log(result));//expect(result).to.be.equal(locator.toolsPanel.body.descendant.innerText[index]));
+        }));
+      });
+    });
+
+    it('open Tools panel', function() {
+      return driver.findElement(tabs[4].css).click()
+        .then(() => driver.findElement(tabs[4].css).getAttribute('class'))
+        .then((attribute) => expect(attribute.split(/\s/).slice(-1)[0]).to.equal('active'));
+    });
+
+    it('Tools panel total text', function() {
+      return driver.findElement(locator.toolsPanel.panel.css).findElements(By.xpath('.//*'))
+        .then((foundElements) => getAllDescentElementsUniqueText(foundElements))
+        .then((resultArray) => {
+          let resultString = resultArray.join('').replace(/\n/g, '').replace(/\s+/g, '');
+          return resultString;
+        })
+        .then((result) => console.log(result));//expect(result).to.be.equal(locator.renderSettingsPanel.panel.summary));
+    });
+  });
+});
 /*create tests that check tabs elements presence and their containment:
 //may be make up a function(tabName, tabSelector, elementSelectors, elementText)???
   describe('corresponding tab', function() {})
     //it('open that tab', function() {}); done
     //it('check whether every tab sign contains right name', function() {}); done
-    //it('check every panel has corresponding number of descendents', function() {}); why?
+    //it('check every panel has corresponding number of descendants', function() {}); why?
     //it('check every elements needed are visible', function() {}); to do
     //it('check every element is located at the right place', function() {}); manually
     //it('check every element has the right size', function() {});??? negative

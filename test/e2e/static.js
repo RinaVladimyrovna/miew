@@ -1,7 +1,12 @@
+// forgive me reader. Just do not blame me.
 export default {
+// material IDs
   materialIdentifiers: ['DF', 'SF', 'PL', 'ME', 'TR', 'GL'],
+// colorer IDs
   colorIdentifiers: ['EL', 'RT', 'SQ', 'CH', 'SS', 'UN', 'CO', 'CF', 'TM', 'OC', 'HY', 'MO'],
+// mode IDs
   modeIdentifiers: ['LN', 'LC', 'BS', 'VW', 'TR', 'TU', 'CA', 'QS', 'SA', 'SE', 'CS', 'TX'],
+// colorer settings/parameters/commands sorted by colorer ID
   colourSettings: [{
     colorId: 'EL', settingNames: ['carbon = "purple"', 'carbon = 0x00FF00', 'carbon = -1',
       'carbon = 7394559']
@@ -29,6 +34,8 @@ export default {
     colorId: 'HY', settingNames: ['gradient = "hot"']
   }
   ],
+// mode settings/parameters/commands sorted by mode ID
+// colorer ID is written to let them be different for best result analysis
   modeSettings: [{
     modeId: 'BS', colorId: 'EL', settingNames: ['atom = 0.15', 'bond = 0.4', 'space = 0.8', 'multibond = false']
   },
@@ -67,13 +74,16 @@ export default {
       "verticalAlign = 'top'", 'horizontalAlign = "left"', 'dx = -10',
       'dy = 10', 'bg = "adjust"', 'fg = "inverse"', 'showBg = false']
   }],
+// selectors for EGK molecule
   egkSelectors: [{name: 'chain B, D', colorId: 'CH'},
     {name: 'nucleic', colorId: 'SS'}, {name: 'purine', colorId: 'RT'},
     {name: 'pyrimidine', colorId: 'RT'}
   ],
+// selectors for VHG molecule
   vhgSelectors: ['charged', 'nonpolar', 'polar', 'basic', 'acidic', 'aromatic', 'protein', 'none', 'water', 'hetatm',
     'name OG1', 'elem N', 'residue pro', 'altloc B', 'polarh', 'nonpolarh', 'serial 379:2584', 'sequence 61:239'
   ],
+// sources for downloading a molecule structures (need to expand it with "pdb:<molecule>", "pc:<molecule>")
   loadList: [{
     moleculeId: '3C9L', link: '3c9l', source: 'protein data bank', format: 'pdb',
     view: '1fMF4QSevYcIN5EE/3ZzNPJuGk7izdC29eW5lPw=='
@@ -94,6 +104,7 @@ export default {
     moleculeId: 'ergosteryl 3-beta-D-glucoside', link: 'pubchem:ergosteryl 3-beta-D-glucoside', source: 'PubChem',
     format: 'json', view: '1BOccP2UZYj3Jdl4+QBYJPgAAAAAAAACAAAAAgA=='
   }],
+// additional settings to realize
   renderSettingList: ['axes', 'fog', 'fxaa', 'ao', 'draft.clipPlane'], //pair with ['true', 'false'] array
   renderSettingList1: ['theme light', 'theme dark', 'fogFarFactor 1.5', 'fogNearFactor 1.5', 'scale 0.8', 'scale 1.25',
     'rotate x 180', 'rotate y -72 y -72 y -36', 'rotate x 180 z 180 y 180', 'translate x 2', 'translate y 2',

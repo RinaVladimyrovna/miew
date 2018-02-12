@@ -1,14 +1,22 @@
+// import all we need
 import _ from 'lodash';
 import {expect} from 'chai';
 import staticConf from '../static';
 import golden from '../golden';
 import {page} from '../rep.e2e';
 
+// keep in mind, we have many selectors and too few molecules all selectors can be applied to.
+// And even fewer molecules we can see bugs on. So just let change molecules every time we need
+// for better testing
 exports.SelectorTests = function() {
+// run test set for selectors
   describe('assign all combinations of seltors and modes via terminal, i. e.', function() {
 
     let retrieve = {};
 
+// good old legacy function
+// better get rid of it to prevent missing something in case there is a misprint in the code.
+// Better to use our static file with our misprints we can correct at any moment.
     before(function() {
       [
         ['modes', 'BS'],
@@ -27,11 +35,13 @@ exports.SelectorTests = function() {
       });
     });
 
+// run tests for selectors listed below
     describe('aminoacidic, none, hetatm, name, elem, residue, altloc, hydrogenic', function() {
 
       const suite = this;
 
       before(function() {
+// now a days, we use legacy function for mode types and static for selectors
         return Promise.all([retrieve.modes, staticConf.vhgSelectors]).then(([modes, selectors]) => {
           _.each(modes, (mode) => {
             _.each(selectors, (selector) => {
@@ -47,6 +57,7 @@ exports.SelectorTests = function() {
         });
       });
 
+// those selectors better apply to the next molecule
       it('load 5VHG with an appropriate orientation and scale', function() {
         return page.openTerminal()
           .then(() => page.runScript(`\
@@ -60,11 +71,13 @@ exports.SelectorTests = function() {
       });
     });
 
+// run tests for selectors listed below
     describe('serial, sequence, chain, nucleic, purine, pyrimidine', function() {
 
       const suite = this;
 
       before(function() {
+// now a days, we use legacy function for mode types and static for selectors
         return Promise.all([retrieve.modes, staticConf.egkSelectors]).then(([modes, selectors]) => {
           _.each(modes, (mode) => {
             _.each(selectors, (selector) => {
@@ -80,6 +93,7 @@ exports.SelectorTests = function() {
         });
       });
 
+// those selectors better apply to the next molecule
       it('load 1EGK with an appropriate orientation and scale', function() {
         return page.openTerminal()
           .then(() => page.runScript(`\
