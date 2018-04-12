@@ -63,19 +63,19 @@ function fillInArray(arrMinutiae, identifierArr) {
 //Depends on colour's index. Screenshots every pair//
 /////////////////////////////////////////////////////
 function modeColorPairs(caseSwitch, colour, mode) {
-  return driver.wait(until.elementLocated(menu.openButton), 5 * 1000)
+  return driver.wait(until.elementLocated(menu.openButton), 5 * 1000, "Can not find Menu button, sorry")
     .then(() => {
       if (caseSwitch) {
         return driver.findElement(menu.openButton).click();
       } else {
         return driver.findElement(menu.openButton).click()
           .then(() => driver.findElement(menu.representationTab).click())
-          .then(() => driver.wait(until.elementLocated(menu.modeTab), 5 * 1000))
+          .then(() => driver.wait(until.elementLocated(menu.modeTab), 5 * 1000, "Can not choose a mode since there is no mode tab"))
           .then(() => driver.findElement(menu.modeTab).click())
           .then(() => driver.findElement(mode.css).click());
       }
     })
-    .then(() => driver.wait(until.elementLocated(menu.colorTab), 5 * 1000))
+    .then(() => driver.wait(until.elementLocated(menu.colorTab), 5 * 1000, "Can not choose a colorer since there is no colorer tab"))
     .then(() => driver.findElement(menu.colorTab).click())
     .then(() => driver.findElement(colour.css).click())
     .then(() => driver.findElement(menu.closeButton).click())
@@ -94,7 +94,7 @@ function modeColorDisplay(caseSwitch, colour, mode) {
 // caseSwitch take either 0 or 1
       if (!caseSwitch) {
         return driver.findElement(display.modeButton).click()
-          .then(() => driver.wait(until.elementLocated(mode.css), 5 * 1000))
+          .then(() => driver.wait(until.elementLocated(mode.css), 5 * 1000, "Can not find demanded mode in the list"))
           .then(() => driver.findElement(mode.css).click());
       } else {
 // just ignore it if we do not need to change a mode type
@@ -102,9 +102,9 @@ function modeColorDisplay(caseSwitch, colour, mode) {
       }
     })
 // change color type to the next colour
-    .then(() => driver.wait(until.elementLocated(display.colorButton), 5 * 1000))
+    .then(() => driver.wait(until.elementLocated(display.colorButton), 5 * 1000, "Can not find Display button for colorers"))
     .then(() => driver.findElement(display.colorButton).click())
-    .then(() => driver.wait(until.elementLocated(colour.css), 5 * 1000))
+    .then(() => driver.wait(until.elementLocated(colour.css), 5 * 1000, "Can not find demandded colorer in the list"))
     .then(() => driver.findElement(colour.css).click())
     .then(() => page.waitUntilRebuildIsDone())
     .then(() => golden.shouldMatch(`1aid_${mode.identifier}_${colour.identifier}`, this));

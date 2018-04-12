@@ -19,10 +19,10 @@ exports.LoadingTests = function() {
       let loads = identifiers.loadList;
       _.each(loads, (load) => {
         suite.addTest(it(`${load.source}`, function() {
-          return driver.wait(until.elementLocated(menu.openButton), 5 * 1000)
+          return driver.wait(until.elementLocated(menu.openButton), 5 * 1000, "Can not find Menu button, sorry")
             .then(() => driver.findElement(menu.openButton).click())
             .then(() => driver.findElement(menu.loadTab).click())
-            .then(() => driver.wait(until.elementLocated(menu.loadField), 5 * 1000))
+            .then(() => driver.wait(until.elementLocated(menu.loadField), 5 * 1000, "There is no Load field here to enter a molecule name into"))
             .then(() => driver.findElement(menu.loadField).sendKeys(`${load.link}`))
             .then(() => driver.wait(until.elementLocated(menu.loadOpenButton)))
             .then(() => driver.findElement(menu.loadOpenButton).click())

@@ -21,10 +21,10 @@ exports.MaterialTests = function() {
 // create a test for every material
       _.each(materials, (material) => {
         suite.addTest(it(`checking ${material.identifier}`, function() {
-          return driver.wait(until.elementLocated(menu.openButton), 5 * 1000)
+          return driver.wait(until.elementLocated(menu.openButton), 5 * 1000, "Can not find Menu button, sorry")
             .then(() => driver.findElement(menu.openButton).click())
             .then(() => driver.findElement(menu.representationTab).click())
-            .then(() => driver.wait(until.elementLocated(menu.materialTab), 5 * 1000))
+            .then(() => driver.wait(until.elementLocated(menu.materialTab), 5 * 1000, "Can not find Material tab, please open it for me"))
             .then(() => driver.findElement(menu.materialTab).click())
             .then(() => driver.findElement(material.css).click())
             .then(() => driver.findElement(menu.closeButton).click())
